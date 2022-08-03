@@ -5,9 +5,9 @@ import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.openqa.selenium.WebDriver;
 import ru.netology.testmode.data.DataGenerator;
-import ru.netology.testmode.data.LoginPage;
+import ru.netology.testmode.page.DashBoardPage;
+import ru.netology.testmode.page.LoginPage;
 
 import java.time.Duration;
 
@@ -19,11 +19,14 @@ import static ru.netology.testmode.data.DataGenerator.getRandomPassword;
 
 class AuthTest {
 
-    LoginPage loginPage = new LoginPage();
+    LoginPage loginPage;
+    DashBoardPage dashBoardPage;
 
     @BeforeEach
     void setup() {
         open("http://localhost:9999");
+        loginPage = new LoginPage();
+        dashBoardPage = new DashBoardPage();
     }
 
     @Test
@@ -31,16 +34,16 @@ class AuthTest {
     void shouldSuccessfulLoginIfRegisteredActiveUser() {
         var registeredUser = getRegisteredUser("active");
         DataGenerator.sendRequest(registeredUser);
-        loginPage.login(registeredUser);
-        $x("//*[contains(text(),'Личный кабинет')]").shouldBe(Condition.visible);
+        loginPage.login(registeredUser.getLogin(),registeredUser.getPassword());
+        dashBoardPage.getHeading().shouldBe(Condition.visible);
     }
 
     @Test
     @DisplayName("Should get error message if login with not registered user")
     void shouldGetErrorIfNotRegisteredUser() {
         var notRegisteredUser = getUser("active");
-        loginPage.login(notRegisteredUser);
-        $x("//*[text()='Неверно указан логин или пароль']").shouldBe(Condition.visible);
+        loginPage.login(notRegisteredUser.getLogin(),notRegisteredUser.getPassword());
+        loginPage.getWrongLoginOrPassword().shouldBe(Condition.visible);
     }
 
     @Test
@@ -48,8 +51,8 @@ class AuthTest {
     void shouldGetErrorIfBlockedUser() {
         var blockedUser = getRegisteredUser("blocked");
         DataGenerator.sendRequest(blockedUser);
-        loginPage.login(blockedUser);
-        $x("//*[text()='Пользователь заблокирован']").shouldBe(Condition.visible, Duration.ofSeconds(10));
+        loginPage.login(blockedUser.getLogin(), blockedUser.getPassword());
+        loginPage.getBlockedUser().shouldBe(Condition.visible, Duration.ofSeconds(10));
     }
 
     @Test
@@ -58,8 +61,8 @@ class AuthTest {
         var registeredUser = getRegisteredUser("active");
         var wrongLogin = getRandomLogin();
         DataGenerator.sendRequest(registeredUser);
-        loginPage.loginWrongLogin(registeredUser, wrongLogin);
-        $x("//*[text()='Неверно указан логин или пароль']").shouldBe(Condition.visible);
+        loginPage.login(wrongLogin, registeredUser.getPassword());
+        loginPage.getWrongLoginOrPassword().shouldBe(Condition.visible);
     }
 
     @Test
@@ -68,8 +71,8 @@ class AuthTest {
         var registeredUser = getRegisteredUser("active");
         var wrongPassword = getRandomPassword();
         DataGenerator.sendRequest(registeredUser);
-        loginPage.loginWrongLogin(registeredUser, wrongPassword);
-        $x("//*[text()='Неверно указан логин или пароль']").shouldBe(Condition.visible);
+        loginPage.login(registeredUser.getLogin(), wrongPassword);
+        loginPage.getWrongLoginOrPassword().shouldBe(Condition.visible);
     }
 }
 
