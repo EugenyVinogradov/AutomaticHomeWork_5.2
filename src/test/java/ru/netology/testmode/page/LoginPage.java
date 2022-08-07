@@ -1,5 +1,6 @@
 package ru.netology.testmode.page;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 
 import static com.codeborne.selenide.Selenide.$;
@@ -19,13 +20,13 @@ public class LoginPage {
         return new DashBoardPage();
     }
 
-    public SelenideElement wrongLoginOrPassword() {
-        SelenideElement wrongLogOrPass = wrongLoginOrPassword;
-        return wrongLogOrPass;
+    public boolean wrongLoginOrPassword() {
+        wrongLoginOrPassword.shouldBe(Condition.visible);
+        return true;
     }
 
-    public SelenideElement blockedUser() {
-        SelenideElement blockUser = blockedUser;
-        return blockUser;
+    public boolean blockedUser() {
+        blockedUser.shouldBe(Condition.visible);
+        return true;
     }
 }

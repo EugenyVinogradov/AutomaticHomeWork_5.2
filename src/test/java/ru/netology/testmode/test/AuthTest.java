@@ -2,6 +2,7 @@ package ru.netology.testmode.test;
 
 
 import com.codeborne.selenide.Condition;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -38,7 +39,7 @@ class AuthTest {
     void shouldGetErrorIfNotRegisteredUser() {
         var notRegisteredUser = getUser("active");
         loginPage.login(notRegisteredUser.getLogin(), notRegisteredUser.getPassword());
-        loginPage.wrongLoginOrPassword().shouldBe(Condition.visible);
+        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
     }
 
     @Test
@@ -47,8 +48,7 @@ class AuthTest {
         var blockedUser = getRegisteredUser("blocked");
         DataGenerator.sendRequest(blockedUser);
         loginPage.login(blockedUser.getLogin(), blockedUser.getPassword());
-        loginPage.blockedUser().shouldBe(Condition.visible);
-    }
+        Assertions.assertTrue(loginPage.blockedUser());    }
 
     @Test
     @DisplayName("Should get error message if login with wrong login")
@@ -57,7 +57,7 @@ class AuthTest {
         var wrongLogin = getRandomLogin();
         DataGenerator.sendRequest(registeredUser);
         loginPage.login(wrongLogin, registeredUser.getPassword());
-        loginPage.wrongLoginOrPassword().shouldBe(Condition.visible);
+        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
     }
 
     @Test
@@ -67,7 +67,7 @@ class AuthTest {
         var wrongPassword = getRandomPassword();
         DataGenerator.sendRequest(registeredUser);
         loginPage.login(registeredUser.getLogin(), wrongPassword);
-        loginPage.wrongLoginOrPassword().shouldBe(Condition.visible);
+        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
     }
 }
 
