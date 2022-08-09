@@ -39,7 +39,7 @@ class AuthTest {
     void shouldGetErrorIfNotRegisteredUser() {
         var notRegisteredUser = getUser("active");
         loginPage.login(notRegisteredUser.getLogin(), notRegisteredUser.getPassword());
-        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
+        loginPage.wrongLoginOrPassword();
     }
 
     @Test
@@ -48,7 +48,8 @@ class AuthTest {
         var blockedUser = getRegisteredUser("blocked");
         DataGenerator.sendRequest(blockedUser);
         loginPage.login(blockedUser.getLogin(), blockedUser.getPassword());
-        Assertions.assertTrue(loginPage.blockedUser());    }
+        loginPage.blockedUser();
+    }
 
     @Test
     @DisplayName("Should get error message if login with wrong login")
@@ -57,7 +58,7 @@ class AuthTest {
         var wrongLogin = getRandomLogin();
         DataGenerator.sendRequest(registeredUser);
         loginPage.login(wrongLogin, registeredUser.getPassword());
-        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
+        loginPage.wrongLoginOrPassword();
     }
 
     @Test
@@ -67,7 +68,7 @@ class AuthTest {
         var wrongPassword = getRandomPassword();
         DataGenerator.sendRequest(registeredUser);
         loginPage.login(registeredUser.getLogin(), wrongPassword);
-        Assertions.assertTrue(loginPage.wrongLoginOrPassword());
+        loginPage.wrongLoginOrPassword();
     }
 }
 

@@ -20,13 +20,11 @@ public class LoginPage {
         return new DashBoardPage();
     }
 
-    public boolean wrongLoginOrPassword() {
+    public void wrongLoginOrPassword() {
         wrongLoginOrPassword.shouldBe(Condition.visible);
-        return true;
     }
 
-    public boolean blockedUser() {
+    public void blockedUser() {
         blockedUser.shouldBe(Condition.visible);
-        return true;
     }
 }
